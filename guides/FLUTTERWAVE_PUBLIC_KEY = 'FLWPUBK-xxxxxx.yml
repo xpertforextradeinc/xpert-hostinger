@@ -1,0 +1,16 @@
+FLUTTERWAVE_PUBLIC_KEY = 'FLWPUBK-xxxxxxxxxxxxxxxxxxxx-X'
+1. Press Ctrl+Shift+P
+2. Type: "SFTP: Upload Project"
+3. Select Hostinger configuration
+4. Wait 30 seconds - Done! ✅
+
+Host: 157.173.208.8:65002
+Username: u404533250
+Upload: All files to /domains/xpertforextrad.eu/public_html/
+
+Visit: https://xpertforextrad.eu
+Check: Signals should show (if bot is running)
+Test: Click "History" → See signal table
+Enable: Browser notifications toggle
+
+recent_signals = []  # Stores last 50 signals

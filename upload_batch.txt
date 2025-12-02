@@ -1,0 +1,26 @@
+cd /domains/xpertforextrad.eu/public_html
+lcd C:\Users\USER\Projects\xpert-hostinger
+put index.html
+put signals-history.html
+put sitemap.xml
+put robots.txt
+cd css
+lcd css
+put style.css
+cd ..
+lcd ..
+cd js
+lcd js
+put main.js
+put signals.js
+put payments.js
+put affiliate.js
+put bot-integration.js
+put signal-history.js
+cd ..
+lcd ..
+cd pages
+lcd pages
+put forex-basics.html
+put risk-management.html
+quit

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /scripts/
+Disallow: /.vscode/
+Disallow: /.git/
+
+Sitemap: https://xpertforextrad.eu/sitemap.xml

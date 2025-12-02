@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal History & Statistics | Xpert Forex Trade</title>
+    <meta name="description" content="View complete trading signal history with performance statistics, win rates, and detailed analytics.">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(245, 158, 11, 0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0.5rem 0;
+        }
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .filter-bar {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: transparent;
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+        .filter-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+        .history-table {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        .history-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history-table th {
+            background: rgba(245, 158, 11, 0.1);
+            padding: 1rem;
+            text-align: left;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .history-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-win {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        .status-loss {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+        }
+        .chart-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        .notification-toggle {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-switch.active {
+            background: var(--success);
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.active::after {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Promo Bar -->
+    <div class="promo-bar">
+        <p>🎉 <strong>LIMITED OFFER:</strong> Get 50% OFF VIP Membership - Use code: <strong>XPERT50</strong></p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html" style="color: var(--accent); text-decoration: none; font-size: 1.5rem; font-weight: 700;">
+                    Xpert Forex Trade
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="signals-history.html" class="active">Signal History</a></li>
+                <li><a href="pages/forex-basics.html">Learn</a></li>
+                <li><a href="#broker">Brokers</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section style="padding: 4rem 0; min-height: 100vh;">
+        <div class="container">
+            <h1 style="text-align: center; margin-bottom: 1rem;">Signal History & Performance</h1>
+            <p style="text-align: center; color: var(--gray); max-width: 600px; margin: 0 auto 3rem;">
+                Track all trading signals with real-time statistics and performance analytics
+            </p>
+
+            <!-- Win Rate Statistics -->
+            <div class="stats-dashboard">
+                <div class="stat-card">
+                    <div class="stat-label">Total Signals</div>
+                    <div class="stat-value" id="total-signals">0</div>
+                    <p style="color: var(--gray); margin: 0; font-size: 0.9rem;">All time</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value" id="win-rate" style="color: var(--success);">0%</div>
+                    <p style="color: var(--gray); margin: 0; font-size: 0.9rem;">Success ratio</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Signals</div>
+                    <div class="stat-value" id="active-signals">0</div>
+                    <p style="color: var(--gray); margin: 0; font-size: 0.9rem;">Currently running</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Profit</div>
+                    <div class="stat-value" id="avg-profit">+0</div>
+                    <p style="color: var(--gray); margin: 0; font-size: 0.9rem;">Per signal (pips)</p>
+                </div>
+            </div>
+
+            <!-- Notification Toggle -->
+            <div class="notification-toggle">
+                <div>
+                    <h3 style="margin: 0 0 0.5rem 0;">🔔 Signal Notifications</h3>
+                    <p style="color: var(--gray); margin: 0;">Get instant browser notifications for new signals</p>
+                </div>
+                <div class="toggle-switch" id="notification-toggle" onclick="toggleNotifications()"></div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <span style="color: var(--gray); font-weight: 600;">Filter by:</span>
+                <button class="filter-btn active" onclick="filterSignals('ALL')">All Pairs</button>
+                <button class="filter-btn" onclick="filterSignals('EUR/USD')">EUR/USD</button>
+                <button class="filter-btn" onclick="filterSignals('GBP/USD')">GBP/USD</button>
+                <button class="filter-btn" onclick="filterSignals('USD/JPY')">USD/JPY</button>
+                <button class="filter-btn" onclick="filterSignals('AUD/USD')">AUD/USD</button>
+                <button class="filter-btn" onclick="filterSignals('BUY')">BUY Only</button>
+                <button class="filter-btn" onclick="filterSignals('SELL')">SELL Only</button>
+            </div>
+
+            <!-- History Table -->
+            <div class="history-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Pair</th>
+                            <th>Signal</th>
+                            <th>Entry</th>
+                            <th>Stop Loss</th>
+                            <th>Take Profit</th>
+                            <th>Status</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 3rem; color: var(--gray);">
+                                Loading signal history...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--card-bg); padding: 3rem 0; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="container">
+            <p style="color: var(--gray);">&copy; 2025 Xpert Forex Trade. All rights reserved.</p>
+            <p style="color: var(--gray); font-size: 0.85rem; margin-top: 1rem;">
+                <strong>Risk Warning:</strong> Trading forex carries risk. Past performance is not indicative of future results.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/signal-history.js"></script>
+</body>
+</html>

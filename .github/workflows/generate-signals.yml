@@ -1,0 +1,44 @@
+name: Generate Daily Trading Signals
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Run at 6 AM UTC daily
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate-signals:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Signals with Gemini AI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          node scripts/generate-signals.js
+
+      - name: Upload signals to Hostinger
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
+          HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
+        run: |
+          sudo apt-get install -y sshpass
+          sshpass -p "$HOSTINGER_PASSWORD" scp -P 65002 -o StrictHostKeyChecking=no \
+            data/signals.json \
+            "$HOSTINGER_USER@$HOSTINGER_HOST:/home/u404533250/domains/xpertforextrad.eu/public_html/data/"
+
+      - name: Notify Slack
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"✅ Daily trading signals published to xpertforextrad.eu"}' \
+            $SLACK_WEBHOOK
