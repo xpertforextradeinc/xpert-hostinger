@@ -31,7 +31,12 @@ jobs:
           HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
         run: |
           sudo apt-get install -y sshpass
-          sshpass -p "$HOSTINGER_PASSWORD" scp -P 65002 -o StrictHostKeyChecking=no \
+          sshpass -p "$HOSTINGER_PASSWORD" scp -P 65002 \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -o ConnectTimeout=30 \
+            -o ServerAliveInterval=15 \
+            -o ServerAliveCountMax=3 \
             data/signals.json \
             "$HOSTINGER_USER@$HOSTINGER_HOST:/home/u404533250/domains/xpertforextrad.eu/public_html/data/"
 
