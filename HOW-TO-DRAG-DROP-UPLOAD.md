@@ -164,6 +164,7 @@
 
 ### ❌ DON'T:
 - Don't drag folders that aren't needed (.git, .github, .vscode)
+  > *Note: These folders are usually excluded automatically by most upload methods (like VS Code SFTP or FileZilla, if configured). Only avoid them when using manual drag-and-drop in the browser File Manager.*
 - Don't close browser during upload
 - Don't drag the entire project folder (only the contents)
 - Don't upload .md files (documentation files)
