@@ -21,7 +21,7 @@
 **3. Navigate to Upload Location**
 - You'll see folders on the left side
 - Click: **domains** folder
-- Click: **xpertforextrad.eu** folder  
+- Click: **xpertforextrad.eu** folder
 - Click: **public_html** folder
 - This is where your website files go!
 
