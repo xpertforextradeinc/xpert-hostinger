@@ -27,7 +27,7 @@
 
 **4. Open Your Files on Computer**
 - Open File Explorer (Windows) or Finder (Mac)
-- Navigate to: `C:\Users\USER\Projects\xpert-hostinger\`
+- Navigate to: `[Your project folder location]` (e.g., `C:\Users\YourName\Projects\xpert-hostinger\`)
 - You should see your project files (index.html, css folder, js folder, etc.)
 
 **5. DRAG & DROP! 🎯**
