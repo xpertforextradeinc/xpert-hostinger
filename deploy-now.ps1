@@ -7,7 +7,6 @@ Write-Host "🚀 Deploying Xpert Forex Trade to Hostinger..." -ForegroundColor C
 $hostname = "157.173.208.8"
 $port = 65002
 $username = "u404533250"
-$password = "Change Kapacity`$55"
 $remotePath = "/domains/xpertforextrad.eu/public_html"
 $localPath = "C:\Users\USER\Projects\xpert-hostinger"
 
@@ -32,24 +31,35 @@ Write-Host "📁 Files to upload: $($files.Count)" -ForegroundColor Yellow
 
 # Use WinSCP for upload (if installed)
 if (Get-Command winscp.com -ErrorAction SilentlyContinue) {
-    Write-Host "Using WinSCP..." -ForegroundColor Green
+    Write-Host "Using WinSCP for deployment..." -ForegroundColor Green
+
+    # For password-based auth (less secure, prompts for password)
+    # $password = Read-Host -Prompt "Enter SFTP password for $username" -AsSecureString
+    # $plainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password))
+    # $sessionUrl = "sftp://${username}:${plainPassword}@${hostname}:${port}"
     
+    # Recommended: Use a saved site in WinSCP configured with an SSH key
+    $sessionUrl = "sftp://${username}@${hostname}:${port}"
+
     $sessionScript = @"
-open sftp://${username}:${password}@${hostname}:${port}
+open $sessionUrl -hostkey="ssh-rsa 2048 ..." # Replace with your server's host key
 cd $remotePath
 "@
     
     foreach ($file in $files) {
-        $sessionScript += "put `"$localPath\$file`" `"$remotePath/$file`"`n"
+        $sessionScript += "put `"$localPath\$file`" `"$file`"`n"
     }
     
     $sessionScript += "exit"
     
     $sessionScript | winscp.com /script=-
-} else {
+}
+else {
+}
+else {
     # Manual upload instructions
     Write-Host ""
-    Write-Host "⚠️ WinSCP not found. Manual upload required:" -ForegroundColor Yellow
+    Write-Host "⚠️ WinSCP not found. Please install it and configure a site for automated deployments." -ForegroundColor Yellow
     Write-Host ""
     Write-Host "Option 1: Use VS Code SFTP Extension" -ForegroundColor Cyan
     Write-Host "1. Install extension: Natizyskunk.sftp" -ForegroundColor White
@@ -68,9 +78,5 @@ cd $remotePath
     Write-Host "Then run this script again" -ForegroundColor White
 }
 
-Write-Host ""
-Write-Host "✅ Next: Update bot URL in production" -ForegroundColor Green
-Write-Host "   Current: http://localhost:8080" -ForegroundColor Gray
-Write-Host "   For now, keep bot running locally" -ForegroundColor Gray
 Write-Host ""
 Write-Host "🌐 Website will be live at: https://xpertforextrad.eu" -ForegroundColor Cyan

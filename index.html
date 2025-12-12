@@ -82,6 +82,12 @@
             <div class="signals-grid" id="signals-container">
                 <!-- Loaded via JavaScript/Gemini API -->
             </div>
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="signals-alert-toggle">
+                    <span>Enable instant browser alerts for new signals</span>
+                </label>
+            </div>
             <div class="upgrade-cta">
                 <p>Want ALL signals + entry/exit alerts?</p>
                 <a href="#vip" class="btn btn-primary">Upgrade to VIP - $29/month</a>
@@ -129,6 +135,86 @@
                         <li>✅ Lifetime community access</li>
                     </ul>
                     <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('yearly')">Best Value →</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="mentorship" id="mentorship">
+            <h2>🧑‍🏫 Personalized Trading Mentorship</h2>
+            <p class="section-subtitle">One-on-one coaching sessions tailored to your goals</p>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-badge">POPULAR</div>
+                    <h3>Starter Coaching (30 mins)</h3>
+                    <p>Platform walkthrough, basics and quick Q&A.</p>
+                    <div class="product-price">$29</div>
+                    <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('mentorship')">Book Session</a>
+                </div>
+                <div class="product-card">
+                    <h3>Pro Mentorship (60 mins)</h3>
+                    <p>Deep-dive strategy coaching with live examples.</p>
+                    <div class="product-price">$59</div>
+                    <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('mentorship_pro')">Book Session</a>
+                </div>
+                <div class="product-card">
+                    <h3>Monthly Coaching</h3>
+                    <p>4 sessions per month with chat support.</p>
+                    <div class="product-price">$149</div>
+                    <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('mentorship_monthly')">Subscribe</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="contest" id="contest">
+            <h2>🏆 Trading Challenges & Contests</h2>
+            <p class="section-subtitle">Compete monthly, climb the leaderboard, and win prizes</p>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-badge">MONTHLY</div>
+                    <h3>December Challenge</h3>
+                    <p>Trade demo or real accounts. Top 10 win prizes.</p>
+                    <div class="product-price">$10</div>
+                    <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('contest_entry')">Join Now</a>
+                </div>
+                <div class="product-card">
+                    <h3>VIP Contest</h3>
+                    <p>Higher rewards for VIP members only.</p>
+                    <div class="product-price">$0</div>
+                    <a href="#vip" class="btn btn-secondary">Become VIP</a>
+                </div>
+                <div class="product-card">
+                    <h3>Sponsor Bonuses</h3>
+                    <p>Extra rewards when trading via partner links.</p>
+                    <div class="product-price">Bonus</div>
+                    <a href="https://one.exnessonelink.com/a/ovcmnpj0s2" target="_blank" rel="noopener" class="btn btn-primary" onclick="trackAffiliate('exness_contest')">Get Bonus</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="community" id="community">
+            <h2>👥 Traders Community</h2>
+            <p class="section-subtitle">Join our Discord for signals, tips, and networking</p>
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Free Community</h3>
+                    <div class="price">$0</div>
+                    <ul>
+                        <li>Access to public channels</li>
+                        <li>Occasional free signals</li>
+                        <li>Basic support</li>
+                    </ul>
+                    <a href="https://discord.gg/yourinvite" target="_blank" rel="noopener" class="btn btn-secondary">Join Discord</a>
+                </div>
+                <div class="price-card featured">
+                    <span class="popular-badge">RECOMMENDED</span>
+                    <h3>Premium Community</h3>
+                    <div class="price">$9<span>/month</span></div>
+                    <ul>
+                        <li>Premium signals channels</li>
+                        <li>Priority support</li>
+                        <li>Exclusive content & tools</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" onclick="payWithFlutterwave('community_membership')">Upgrade</a>
                 </div>
             </div>
         </section>
@@ -282,5 +368,34 @@
     <script src="js/payments.js"></script>
     <script src="js/affiliate.js"></script>
     <script src="js/bot-integration.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggle = document.getElementById('signals-alert-toggle');
+            if (toggle) {
+                var enabled = localStorage.getItem('notifications_enabled') === 'true';
+                toggle.checked = enabled;
+                toggle.addEventListener('change', function() {
+                    if (toggle.checked) {
+                        if (Notification.permission === 'default') {
+                            Notification.requestPermission().then(function(permission) {
+                                if (permission === 'granted') {
+                                    localStorage.setItem('notifications_enabled', 'true');
+                                } else {
+                                    toggle.checked = false;
+                                }
+                            });
+                        } else if (Notification.permission === 'granted') {
+                            localStorage.setItem('notifications_enabled', 'true');
+                        } else {
+                            alert('Notifications are blocked. Enable them in your browser settings.');
+                            toggle.checked = false;
+                        }
+                    } else {
+                        localStorage.setItem('notifications_enabled', 'false');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

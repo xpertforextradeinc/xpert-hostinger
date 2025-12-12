@@ -8,7 +8,12 @@ const products = {
     yearly: { name: 'VIP Yearly Signals', amount: 149, currency: 'USD' },
     course: { name: 'Forex Mastery Course', amount: 97, currency: 'USD' },
     ebook: { name: 'Price Action Ebook', amount: 27, currency: 'USD' },
-    journal: { name: 'Trading Journal Template', amount: 15, currency: 'USD' }
+    journal: { name: 'Trading Journal Template', amount: 15, currency: 'USD' },
+    mentorship: { name: 'Starter Coaching (30 mins)', amount: 29, currency: 'USD' },
+    mentorship_pro: { name: 'Pro Mentorship (60 mins)', amount: 59, currency: 'USD' },
+    mentorship_monthly: { name: 'Monthly Coaching (4 sessions)', amount: 149, currency: 'USD' },
+    contest_entry: { name: 'Trading Contest Entry', amount: 10, currency: 'USD' },
+    community_membership: { name: 'Premium Community Membership', amount: 9, currency: 'USD' }
 };
 
 function payWithFlutterwave(productId) {
