@@ -1,7 +1,8 @@
 // Flutterwave Payment Integration
 // Get your keys at: https://dashboard.flutterwave.com
 
-const FLUTTERWAVE_PUBLIC_KEY = 'FLWPUBK-xxxxxxxxxxxxxxxxxxxx-X'; // Replace with your key
+const FLUTTERWAVE_PUBLIC_KEY = (typeof window !== 'undefined' && window.FLUTTERWAVE_PUBLIC_KEY) ? window.FLUTTERWAVE_PUBLIC_KEY : 'FLWPUBK-xxxxxxxxxxxxxxxxxxxx-X';
+const PAYMENT_SUCCESS_URL = (typeof window !== 'undefined' && window.PAYMENT_SUCCESS_URL) ? window.PAYMENT_SUCCESS_URL : null;
 
 const products = {
     monthly: { name: 'VIP Monthly Signals', amount: 29, currency: 'USD' },
@@ -46,7 +47,7 @@ function payWithFlutterwave(productId) {
 }
 
 // Alternative: Paystack for Nigerian users
-const PAYSTACK_PUBLIC_KEY = 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace
+const PAYSTACK_PUBLIC_KEY = (typeof window !== 'undefined' && window.PAYSTACK_PUBLIC_KEY) ? window.PAYSTACK_PUBLIC_KEY : 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxx';
 
 function payWithPaystack(productId) {
     const product = products[productId];
@@ -73,18 +74,33 @@ function payWithPaystack(productId) {
 
 function handlePaymentSuccess(productId, data) {
     // Send to your backend/webhook
-    fetch('/api/payment-success', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            productId,
-            transactionRef: data.tx_ref || data.reference,
-            timestamp: new Date().toISOString()
-        })
-    });
+    if (PAYMENT_SUCCESS_URL) {
+        try {
+            fetch(PAYMENT_SUCCESS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productId,
+                    transactionRef: data.tx_ref || data.reference,
+                    timestamp: new Date().toISOString()
+                }),
+                keepalive: true
+            }).catch(function(){});
+        } catch (e) {}
+    }
     
     // Show success message
     alert('🎉 Payment successful! Check your email for access details.');
+    if (window.entitlements && typeof window.entitlements.grant === 'function') {
+        window.entitlements.grant(productId);
+        // Grant VIP for monthly/yearly
+        if (productId === 'monthly' || productId === 'yearly') {
+            window.entitlements.grant('vip');
+        }
+        if (productId === 'community_membership') {
+            window.entitlements.grant('community_premium');
+        }
+    }
     
     // Redirect based on product
     if (productId === 'monthly' || productId === 'yearly') {
@@ -102,4 +118,10 @@ function collectEmailAndPay(productId) {
     } else {
         alert('Please enter a valid email address');
     }
+}
+
+// Test helper: simulate a successful payment without hitting gateways
+function simulatePaymentSuccess(productId) {
+    var fakeData = { tx_ref: 'TEST-' + Date.now() };
+    handlePaymentSuccess(productId, fakeData);
 }
