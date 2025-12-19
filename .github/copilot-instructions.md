@@ -1,359 +1,460 @@
-# Xpert Forex Trade - Copilot Instructions
+# Copilot Instructions - Order Management System
 
 ## Project Overview
-**Xpert Forex Trade** is a monetized forex trading education and affiliate marketing website designed to generate revenue through multiple streams while providing valuable trading education and resources.
+This document provides Copilot with comprehensive guidelines for developing and maintaining the order management system project at Xpert Forex Trade Inc. These instructions ensure consistency, quality, and adherence to best practices across all code contributions.
 
-## Project Goal
-Build a high-converting forex trading education platform that monetizes through affiliate partnerships, digital products, and advertising while maintaining credibility and user trust.
+---
 
-## Monetization Strategies
+## 1. Coding Standards
 
-### Primary Revenue Streams
-1. **Exness Affiliate Program** 
-   - Earn commissions on trader referrals and trading volume
-   - Partner Link: `https://one.exnessonelink.com/a/ovcmnpj0s2`
-   - Focus on sign-up conversions and active trader retention
+### General Principles
+- **Language**: JavaScript/TypeScript (Node.js backend) and React (Frontend)
+- **Formatter**: Prettier with 2-space indentation
+- **Linter**: ESLint with Airbnb configuration
+- **Code Quality**: Maintain minimum 80% test coverage
 
-2. **Amazon Associates** 
-   - Recommend trading books, monitors, equipment, and educational materials
-   - Tags: 
-     - UK: `xpertonboaruk-21`
-     - EU/DE: `xpertonboareu-22`
-     - US: `xpertonboar08-20`
-   - Product categories: Trading books, multi-monitor setups, ergonomic furniture, financial calculators
+### JavaScript/TypeScript Standards
+- Use ES6+ syntax and features
+- Prefer `const` and `let` over `var`
+- Use arrow functions for conciseness
+- Type all function parameters and return types (TypeScript)
+- Use explicit error handling with try-catch blocks
+- Avoid magic numbers; use named constants
+- Keep functions small and focused (max 20 lines preferred)
+- Use meaningful variable names (e.g., `orderTotal` instead of `ot`)
 
-3. **Display Advertising**
-   - Google AdSense or Media.net for supplementary revenue
-   - Strategic ad placement without compromising user experience
+### React Standards
+- Functional components with Hooks (no class components)
+- Use `useState`, `useEffect`, `useContext`, `useReducer` as needed
+- Prop types validation using PropTypes or TypeScript interfaces
+- Extract reusable components into separate files
+- Keep component files under 300 lines
+- Use meaningful component naming conventions
+- Memoize expensive computations with `useMemo`
+- Optimize re-renders with `React.memo` when appropriate
 
-4. **Digital Products**
-   - Premium trading guides and e-books
-   - Exclusive signal subscriptions
-   - Video courses and webinars
-   - Trading journal templates
+### Async/Await Conventions
+- Always use async/await for asynchronous operations
+- Avoid callback chains; use Promise chains or async/await
+- Handle all promises with `.catch()` or try-catch
+- Never leave unhandled promise rejections
 
-5. **Payment Processing**
-   - Flutterwave/Paystack for African market payments
-   - Stripe/PayPal for international transactions
+---
 
-## Tech Stack
+## 2. File Structure
 
-### Frontend
-- **HTML5** - Semantic markup with accessibility features
-- **CSS3** - Modern responsive design, CSS Grid, Flexbox
-- **JavaScript (Vanilla)** - Lightweight, fast-loading interactions
-
-### Automation & Backend
-- **GitHub Actions** - Content automation and deployment
-- **Gemini API** - AI-powered content generation for market analysis
-- **Slack Integration** - Team notifications for content updates
-
-### Hosting & Infrastructure
-- **Hostinger** - Primary hosting platform
-- **SFTP** - Automated deployment via VS Code
-- **CDN** - Image and asset optimization
-
-## Branding Guidelines
-
-### Brand Identity
-- **Primary Brands**: Xpert Forex Trade
-- **Alternative Names**: global.press0, SlipMint, PayMint
-
-### Color Palette
-```css
---primary: #1a365d      /* Navy Blue - Trust, professionalism */
---accent: #d69e2e       /* Gold - Success, premium quality */
---white: #ffffff        /* Clean backgrounds */
---gray: #f7fafc         /* Subtle sections */
---text: #2d3748         /* Readable body text */
-```
-
-### Brand Tone
-- **Expert** - Demonstrate deep market knowledge
-- **Trustworthy** - Build credibility through transparency
-- **Educational** - Focus on teaching, not just selling
-- **Professional** - Maintain financial industry standards
-- **Accessible** - Make complex concepts understandable
-
-## Code Standards
-
-### HTML Best Practices
-- Use semantic HTML5 elements (`<header>`, `<main>`, `<section>`, `<article>`)
-- Include proper meta tags for SEO (title, description, keywords, OG tags)
-- Add structured data (Schema.org) for rich snippets
-- Ensure WCAG 2.1 Level AA accessibility compliance
-- Use descriptive `alt` attributes for all images
-- Implement lazy loading for images: `loading="lazy"`
-
-### CSS Guidelines
-- **Mobile-First** approach - Start with mobile styles, scale up
-- Use CSS custom properties (variables) for theming
-- Minimize use of `!important`
-- Optimize for performance (avoid expensive selectors)
-- Keep specificity low and maintainable
-- Use BEM or similar naming convention for clarity
-
-### JavaScript Standards
-- Write clean, commented vanilla JavaScript
-- Minimize DOM manipulation for performance
-- Use event delegation where appropriate
-- Implement error handling for API calls
-- Add Google Analytics tracking for affiliate clicks
-- Use `async`/`defer` for script loading
-
-### Performance Optimization
-- Compress images (WebP format preferred)
-- Lazy load below-the-fold content
-- Minimize HTTP requests
-- Enable browser caching
-- Use CDN for static assets
-- Target Lighthouse score: 90+ on all metrics
-
-### SEO Requirements
-- Descriptive, keyword-rich page titles (50-60 chars)
-- Compelling meta descriptions (150-160 chars)
-- Proper heading hierarchy (H1 → H2 → H3)
-- Internal linking strategy
-- XML sitemap generation
-- robots.txt configuration
-- Canonical URLs to prevent duplicates
-
-## Key Pages Structure
-
-### 1. Homepage (`index.html`)
-- **Hero Section** - Clear value proposition, primary CTA
-- **Featured Trading Signals** - Live or recent market analysis
-- **Broker Recommendation** - Prominent Exness affiliate card
-- **Educational Highlights** - Links to learning resources
-- **Social Proof** - Testimonials or success metrics
-- **Secondary CTAs** - Multiple conversion opportunities
-
-### 2. Trading Signals (`signals.html`)
-- Daily forex pair analysis (EUR/USD, GBP/USD, USD/JPY, etc.)
-- Entry, stop-loss, and take-profit levels
-- Market commentary and reasoning
-- Historical performance metrics
-- Real-time or daily updates via Gemini API
-
-### 3. Broker Reviews (`brokers.html`)
-- In-depth Exness review with affiliate deep-links
-- Comparison with other major brokers
-- Feature breakdown (spreads, leverage, platforms)
-- Regulatory information
-- Sign-up process walkthrough
-
-### 4. Learning Center (`/pages/`)
-- **Forex Basics** - Beginner's guide
-- **Risk Management** - Capital preservation strategies
-- **Technical Analysis** - Chart patterns, indicators
-- **Fundamental Analysis** - Economic indicators, news trading
-- **Trading Psychology** - Emotional discipline
-- **Strategy Guides** - Specific trading methodologies
-
-### 5. Tools (`tools.html`)
-- Pip calculator
-- Position size calculator
-- Risk/reward calculator
-- Currency converter
-- Economic calendar embed
-- Trading journal template download
-
-### 6. Contact/About (`about.html`, `contact.html`)
-- Transparent about author/team credentials
-- Disclaimer about trading risks
-- Privacy policy and terms of service
-- Contact form or email
-- Social media links
-
-## Affiliate Integration Best Practices
-
-### Link Structure
-- **Exness Links**: `https://one.exnessonelink.com/a/ovcmnpj0s2`
-- **UTM Parameters**: Add tracking for analytics
-  ```
-  ?utm_source=xpertforex&utm_medium=cta&utm_campaign=hero_signup
-  ```
-
-### CTA Placement Strategy
-- Primary CTA in hero section (above the fold)
-- Secondary CTA in broker recommendation section
-- Inline CTAs within educational content
-- Exit-intent popups (use sparingly)
-- Sticky bottom bar on mobile (optional)
-
-### Compliance
-- Always use `rel="noopener"` for external links
-- Add `rel="sponsored"` for paid affiliate links
-- Clear disclosure: "We may earn a commission from links on this page"
-- Risk disclaimer on every page with trading advice
-
-## Content Automation with Gemini API
-
-### Daily Market Analysis Workflow
-1. **Morning Cron Job** (GitHub Actions)
-   - Trigger at 6:00 AM UTC
-   - Fetch current forex rates via API
-   - Generate market analysis using Gemini API
-
-2. **Content Generation Prompt**
-   ```
-   Analyze current forex market conditions for [PAIRS].
-   Provide entry points, stop-loss, take-profit levels.
-   Include risk assessment and market sentiment.
-   Keep analysis under 300 words per pair.
-   ```
-
-3. **Auto-Publish**
-   - Generate HTML content
-   - Update `signals.html` via GitHub commit
-   - Deploy to Hostinger via SFTP
-   - Send Slack notification to team
-
-4. **Quality Control**
-   - Review generated content for accuracy
-   - Manual approval gate for high-risk periods
-   - Archive old signals for performance tracking
-
-### Slack Notifications
-- New content published
-- High traffic alerts
-- Affiliate conversion notifications
-- Error alerts (API failures, deployment issues)
-
-## File Structure
+### Recommended Directory Layout
 ```
 xpert-hostinger/
-├── index.html                  # Homepage
-├── signals.html                # Daily trading signals
-├── brokers.html                # Broker reviews
-├── tools.html                  # Trading calculators
-├── about.html                  # About page
-├── contact.html                # Contact form
-├── css/
-│   ├── style.css              # Main stylesheet
-│   └── responsive.css         # Media queries (optional)
-├── js/
-│   ├── main.js                # Core functionality
-│   ├── signals.js             # Signal display logic
-│   └── analytics.js           # Tracking & UTM handling
-├── pages/
-│   ├── forex-basics.html      # Educational content
-│   ├── risk-management.html
-│   ├── technical-analysis.html
-│   └── trading-psychology.html
-├── images/
-│   ├── exness-logo.png
-│   ├── hero-bg.jpg
-│   └── [optimized images]
 ├── .github/
+│   ├── copilot-instructions.md
 │   ├── workflows/
-│   │   └── deploy.yml         # CI/CD automation
-│   └── copilot-instructions.md # This file
-├── .vscode/
-│   └── sftp.json              # Deployment config
-└── README.md                   # Project documentation
+│   │   ├── ci.yml
+│   │   ├── deploy.yml
+│   │   └── tests.yml
+│   └── PULL_REQUEST_TEMPLATE.md
+├── src/
+│   ├── components/          # React components
+│   │   ├── Order/
+│   │   │   ├── OrderForm.jsx
+│   │   │   ├── OrderList.jsx
+│   │   │   └── OrderDetails.jsx
+│   │   ├── Payment/
+│   │   ├── Inventory/
+│   │   └── Common/
+│   │       ├── Header.jsx
+│   │       ├── Footer.jsx
+│   │       └── Navigation.jsx
+│   ├── pages/               # Page components
+│   │   ├── HomePage.jsx
+│   │   ├── OrdersPage.jsx
+│   │   ├── DashboardPage.jsx
+│   │   └── NotFoundPage.jsx
+│   ├── services/            # API and external services
+│   │   ├── orderService.js
+│   │   ├── paymentService.js
+│   │   ├── authService.js
+│   │   └── apiClient.js
+│   ├── hooks/               # Custom React hooks
+│   │   ├── useOrder.js
+│   │   ├── useAuth.js
+│   │   └── useFetch.js
+│   ├── utils/               # Utility functions
+│   │   ├── validators.js
+│   │   ├── formatters.js
+│   │   ├── constants.js
+│   │   └── helpers.js
+│   ├── store/               # State management
+│   │   ├── context/
+│   │   └── reducers/
+│   ├── styles/              # Global styles and variables
+│   │   ├── global.css
+│   │   ├── variables.css
+│   │   └── theme.js
+│   ├── __tests__/           # Test files
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── hooks/
+│   ├── App.jsx
+│   └── index.js
+├── server/                  # Backend (if applicable)
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── middleware/
+│   │   ├── utils/
+│   │   └── server.js
+│   ├── __tests__/
+│   └── package.json
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── docs/                    # Documentation
+│   ├── API.md
+│   ├── ARCHITECTURE.md
+│   └── SETUP.md
+├── .env.example
+├── .eslintrc.json
+├── .prettierrc
+├── package.json
+├── README.md
+└── jest.config.js
 ```
-
-## Development Workflow
-
-### Local Development
-1. Edit files in VS Code
-2. Test locally with Live Server
-3. Save to trigger SFTP upload (if enabled)
-4. Verify changes on staging subdomain
-
-### Content Updates
-1. Generate signal via Gemini API or manual entry
-2. Update `js/main.js` `sampleSignals` array
-3. Commit to GitHub
-4. GitHub Actions deploys automatically
-
-### Code Review Checklist
-- [ ] Responsive on mobile, tablet, desktop
-- [ ] All affiliate links working with UTM params
-- [ ] Page load time < 3 seconds
-- [ ] Lighthouse score > 90
-- [ ] No console errors
-- [ ] Proper meta tags for SEO
-- [ ] Risk disclaimers present
-- [ ] Accessibility tested (keyboard nav, screen readers)
-
-## Analytics & Tracking
-
-### Metrics to Monitor
-- **Traffic**: Unique visitors, page views, bounce rate
-- **Conversions**: Affiliate clicks, sign-ups, purchases
-- **Engagement**: Time on page, scroll depth
-- **SEO**: Keyword rankings, organic traffic growth
-
-### Tools to Integrate
-- Google Analytics 4
-- Google Search Console
-- Hotjar or similar for heatmaps
-- Affiliate dashboard tracking
-
-## Security & Privacy
-
-### Security Measures
-- HTTPS enabled (SSL certificate)
-- Sanitize user inputs (contact forms)
-- Regular dependency updates
-- Secure SFTP credentials (use environment variables)
-
-### Privacy Compliance
-- GDPR-compliant cookie notice
-- Privacy policy page
-- User data handling transparency
-- Opt-in for newsletter/emails
-
-## Future Enhancements
-
-### Phase 2 Features
-- User accounts and saved signals
-- Premium membership tier
-- Live chat support
-- Mobile app (PWA)
-- Multi-language support (Spanish, French, Arabic)
-
-### Advanced Monetization
-- Sponsored broker placements
-- Trading course marketplace
-- Affiliate network expansion
-- White-label signal service for partners
-
-## Support & Maintenance
-
-### Regular Tasks
-- Weekly: Review signal accuracy
-- Bi-weekly: Update educational content
-- Monthly: Analyze affiliate performance
-- Quarterly: Major feature updates
-
-### Issue Resolution
-- Monitor error logs
-- User feedback channels
-- A/B test CTAs and layouts
-- Continuous SEO optimization
 
 ---
 
-## Quick Reference Commands
+## 3. Naming Conventions
 
-### Deploy to Hostinger
-Files auto-upload on save via SFTP extension, or manually upload via FTP client.
+### File Naming
+- **Components**: PascalCase (e.g., `OrderForm.jsx`, `PaymentProcessor.jsx`)
+- **Services**: camelCase (e.g., `orderService.js`, `paymentService.js`)
+- **Utilities**: camelCase (e.g., `validators.js`, `formatters.js`)
+- **Tests**: Match source file name with `.test.js` or `.spec.js` suffix
+- **Styles**: kebab-case (e.g., `order-form.css`, `payment-section.css`)
 
-### Test Locally
-Use VS Code Live Server or Python's simple HTTP server:
-```bash
-python -m http.server 8000
-```
+### Variable/Function Naming
+- **Variables**: camelCase (e.g., `orderTotal`, `isProcessing`, `customerEmail`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_RETRIES`, `ORDER_STATUS_PENDING`, `API_TIMEOUT`)
+- **Boolean variables**: Prefix with `is`, `has`, `should`, `can` (e.g., `isLoading`, `hasError`, `shouldValidate`)
+- **Functions**: camelCase, descriptive verb prefixes (e.g., `fetchOrders()`, `calculateTotal()`, `validateEmail()`)
+- **Classes**: PascalCase (e.g., `OrderManager`, `PaymentProcessor`)
 
-### Affiliate Links Configured
-- **Exness**: `https://one.exnessonelink.com/a/ovcmnpj0s2`
-- **Amazon UK**: `xpertonboaruk-21`
-- **Amazon EU/DE**: `xpertonboareu-22`
-- **Amazon US**: `xpertonboar08-20`
+### React Component Props
+- Use descriptive names (e.g., `onOrderSubmit` instead of `onSubmit`)
+- Event handlers start with `on` (e.g., `onClick`, `onChange`, `onSuccess`)
+- Props for data should be singular (e.g., `order` not `orders` for single item)
+
+### API Endpoints
+- Use RESTful conventions with lowercase kebab-case
+- Examples:
+  - `GET /api/orders`
+  - `POST /api/orders`
+  - `GET /api/orders/{id}`
+  - `PUT /api/orders/{id}`
+  - `DELETE /api/orders/{id}`
+  - `GET /api/orders/{id}/status`
 
 ---
 
-**Remember**: Every feature should serve the dual purpose of educating users and guiding them toward profitable actions (affiliate conversions, content engagement, community building).
+## 4. Key Features - Development Guidelines
+
+### Order Management
+- **Create Orders**: Support multiple items per order with quantity validation
+- **Order Status Tracking**: Implement workflow states (pending, processing, shipped, delivered, cancelled)
+- **Order History**: Maintain complete audit trail with timestamps
+- **Bulk Operations**: Support batch order processing and updates
+- Implementation file: `src/services/orderService.js`
+
+### Payment Processing
+- **Payment Gateway Integration**: Support multiple payment methods (credit card, PayPal, bank transfer)
+- **Transaction Verification**: Implement webhook handlers for payment confirmations
+- **Refund Handling**: Support full and partial refunds with audit logging
+- **PCI Compliance**: Never store sensitive payment data; use tokenization
+- Implementation file: `src/services/paymentService.js`
+
+### Inventory Management
+- **Stock Tracking**: Real-time inventory updates with reservations
+- **Low Stock Alerts**: Automatic notifications when items reach threshold
+- **SKU Management**: Proper product identification and categorization
+- **Multi-location Support**: Track inventory across multiple warehouses
+- Implementation file: `src/services/inventoryService.js`
+
+### Authentication & Authorization
+- **User Authentication**: Implement JWT-based authentication
+- **Role-Based Access Control**: Support admin, staff, and customer roles
+- **Session Management**: Proper token refresh and expiration handling
+- **Audit Logging**: Log all authentication events
+- Implementation file: `src/services/authService.js`
+
+### Reporting & Analytics
+- **Order Reports**: Daily, weekly, monthly sales summaries
+- **Revenue Analytics**: Track revenue by product, customer, and time period
+- **Performance Metrics**: Monitor order fulfillment times and customer satisfaction
+- **Data Export**: Support CSV and PDF exports
+- Implementation directory: `src/components/Reports/`
+
+---
+
+## 5. Testing Requirements
+
+### Test Coverage Targets
+- **Overall Coverage**: Minimum 80%
+- **Critical Paths**: 100% coverage (payment, authentication, order creation)
+- **UI Components**: Minimum 70% coverage
+- **Business Logic**: Minimum 90% coverage
+
+### Testing Framework
+- **Unit Tests**: Jest with React Testing Library
+- **Integration Tests**: Supertest for API endpoints
+- **E2E Tests**: Cypress or Playwright for user flows
+- **Performance Tests**: Lighthouse for frontend performance
+
+### Testing Best Practices
+1. **Unit Tests**
+   - Test single functions in isolation
+   - Mock external dependencies (API calls, services)
+   - Test both success and error cases
+   - Use descriptive test names (e.g., `should calculate order total correctly`)
+   - Example path: `src/__tests__/utils/orderCalculator.test.js`
+
+2. **Component Tests**
+   - Test user interactions (clicks, form submissions)
+   - Verify rendered output and state changes
+   - Test with different prop combinations
+   - Mock API calls and child components
+   - Example path: `src/__tests__/components/OrderForm.test.jsx`
+
+3. **Integration Tests**
+   - Test API endpoints with database
+   - Verify business logic workflows
+   - Test error handling and edge cases
+   - Example path: `server/__tests__/routes/orders.test.js`
+
+4. **E2E Tests**
+   - Test complete user workflows
+   - Verify cross-browser compatibility
+   - Test on different devices and screen sizes
+   - Example path: `cypress/e2e/order-creation.cy.js`
+
+### Test File Template
+```javascript
+describe('OrderService', () => {
+  beforeEach(() => {
+    // Setup
+  });
+
+  afterEach(() => {
+    // Cleanup
+  });
+
+  describe('createOrder', () => {
+    it('should create an order with valid data', async () => {
+      // Arrange
+      const orderData = { /* mock data */ };
+      
+      // Act
+      const result = await createOrder(orderData);
+      
+      // Assert
+      expect(result).toBeDefined();
+      expect(result.id).toBeTruthy();
+    });
+
+    it('should throw error with invalid data', async () => {
+      // Arrange
+      const invalidData = { /* invalid data */ };
+      
+      // Act & Assert
+      await expect(createOrder(invalidData)).rejects.toThrow();
+    });
+  });
+});
+```
+
+### Continuous Integration
+- Run tests on all pull requests
+- Fail builds if coverage drops below 80%
+- Run linting and formatting checks
+- Execute E2E tests on staging deployments
+
+---
+
+## 6. Performance Considerations
+
+### Frontend Optimization
+- Implement code splitting and lazy loading for routes
+- Optimize images and assets (use WebP format, compression)
+- Minimize bundle size (target < 200KB gzipped)
+- Use production builds for deployment
+- Implement service workers for offline support
+- Cache API responses with appropriate TTLs
+
+### Backend Optimization
+- Use database indexing for frequently queried fields
+- Implement query pagination (limit 20-50 items per page)
+- Cache frequently accessed data (Redis for sessions, frequently accessed products)
+- Optimize N+1 query problems
+- Monitor database performance and query times
+- Implement request rate limiting (e.g., 100 requests per minute per IP)
+
+### Monitoring & Logging
+- Log all errors with context and stack traces
+- Monitor API response times and error rates
+- Track key business metrics (orders created, revenue, conversion rates)
+- Set up alerts for critical failures
+- Implement structured logging (JSON format)
+
+---
+
+## 7. Security Best Practices
+
+### Code Security
+- Validate and sanitize all user inputs
+- Implement CSRF protection for state-changing operations
+- Use Content Security Policy (CSP) headers
+- Implement CORS correctly (don't use `*` for production)
+- Store sensitive data in environment variables (never in code)
+- Implement rate limiting on authentication endpoints
+
+### Data Protection
+- Encrypt sensitive data at rest and in transit (HTTPS only)
+- Implement proper access controls (users can only access their own data)
+- Hash passwords using bcrypt or similar (minimum 10 rounds)
+- Implement secure session management
+- Regular security audits and dependency updates
+
+### API Security
+- Use authentication for all endpoints (except public endpoints)
+- Implement authorization checks for resource access
+- Use API versioning
+- Implement request validation with JSON schemas
+- Log all authentication failures and suspicious activities
+
+---
+
+## 8. Git & Branching Workflow
+
+### Branch Naming Convention
+- **Feature branches**: `feature/order-status-tracking`
+- **Bug fixes**: `bugfix/payment-calculation-error`
+- **Hotfixes**: `hotfix/critical-security-patch`
+- **Refactoring**: `refactor/order-service-cleanup`
+
+### Commit Message Format
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+
+Example:
+```
+feat(order): add order status tracking
+
+Implement order status workflow with database
+persistence and real-time updates via WebSocket.
+
+Closes #123
+```
+
+### Pull Request Guidelines
+- Link to related issues or tasks
+- Provide clear description of changes
+- Include screenshots for UI changes
+- Ensure all tests pass and coverage maintained
+- Request reviews from at least 2 team members
+- Squash commits before merging (keep history clean)
+
+---
+
+## 9. Documentation Requirements
+
+### Code Documentation
+- Document complex functions with JSDoc comments
+- Include parameter types and return types
+- Add usage examples for utility functions
+- Document public APIs with request/response examples
+- Keep documentation up-to-date with code changes
+
+### JSDoc Template
+```javascript
+/**
+ * Calculate the total price of an order including tax and shipping
+ * @param {Object} order - The order object
+ * @param {Array<Object>} order.items - Array of order items
+ * @param {number} order.items[].price - Price per item
+ * @param {number} order.items[].quantity - Quantity ordered
+ * @param {number} shippingCost - Shipping cost in dollars
+ * @returns {number} Total order price including tax and shipping
+ * @throws {Error} If order data is invalid
+ * @example
+ * const total = calculateOrderTotal({ items: [...] }, 10);
+ * console.log(total); // 125.50
+ */
+function calculateOrderTotal(order, shippingCost) {
+  // Implementation
+}
+```
+
+### Project Documentation
+- Maintain up-to-date README with setup instructions
+- Document API endpoints in `docs/API.md`
+- Provide architecture overview in `docs/ARCHITECTURE.md`
+- Include troubleshooting guide in `docs/TROUBLESHOOTING.md`
+- Keep CHANGELOG.md updated with releases
+
+---
+
+## 10. Common Patterns & Anti-patterns
+
+### Good Patterns
+✅ Use custom hooks for shared logic
+✅ Use composition over inheritance
+✅ Separate concerns (services for API calls, components for UI)
+✅ Use environment variables for configuration
+✅ Implement proper error boundaries
+✅ Use React Context for global state (if Redux not needed)
+✅ Extract magic strings to constants
+✅ Implement loading and error states in UI
+
+### Anti-patterns to Avoid
+❌ Prop drilling (pass too many props through components)
+❌ API calls directly in components (use custom hooks/services)
+❌ State mutations (always create new state objects)
+❌ Missing error handling in async operations
+❌ Hard-coded values in components
+❌ Storing unnecessary data in global state
+❌ Ignoring test coverage metrics
+❌ Overly complex component logic
+
+---
+
+## 11. Helpful Resources
+
+- **React Documentation**: https://react.dev
+- **Testing Library**: https://testing-library.com/react
+- **Jest Documentation**: https://jestjs.io
+- **ESLint Rules**: https://eslint.org/docs/rules/
+- **Prettier Code Formatter**: https://prettier.io
+
+---
+
+## 12. Questions & Support
+
+For clarifications on these guidelines:
+1. Check existing code in the repository
+2. Review similar implementations in the codebase
+3. Ask in team discussions or open an issue
+4. Refer to pull request comments from previous reviews
+
+---
+
+**Last Updated**: 2025-12-19
+**Maintained By**: Xpert Forex Trade Inc. Development Team
