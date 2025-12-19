@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order System | XpertForexTrad EU</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 2rem;
+      color: #333;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    h1, h2 { color: #667eea; margin-bottom: 1rem; }
+    label { display: block; margin: 1rem 0 0.25rem; font-weight: 600; }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 2rem;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #764ba2; }
+    .order-item {
+      background: #f9f9f9;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+    }
+    .status { font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
+    .status.pending { color: #f59e0b; }
+    .status.approved { color: #10b981; }
+    .status.cancelled { color: #ef4444; }
+    .alert { padding: 1rem; margin-bottom: 1rem; border-radius: 6px; display: none; }
+    .alert.success { background: #d1fae5; color: #065f46; display: block; }
+    .alert.error { background: #fee2e2; color: #991b1b; display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🛒 XpertForexTrad Order System</h1>
+    <p>Governed, auditable, contributor-friendly order management.</p>
+    <div id="alertBox" class="alert"></div>
+
+    <h2>Place New Order</h2>
+    <form id="orderForm">
+      <label>Customer Name *</label>
+      <input type="text" id="customer_name" required>
+
+      <label>Product *</label>
+      <input type="text" id="product" placeholder="e.g., SlipMint Pro License" required>
+
+      <label>Quantity *</label>
+      <input type="number" id="quantity" value="1" min="1" required>
+
+      <label>Amount (USD) *</label>
+      <input type="number" id="amount" step="0.01" required>
+
+      <label>Payment Method</label>
+      <select id="payment_method">
+        <option value="paystack">Paystack</option>
+        <option value="flutterwave">Flutterwave</option>
+        <option value="stripe">Stripe</option>
+        <option value="bank_transfer">Bank Transfer</option>
+      </select>
+
+      <label>Notes (optional)</label>
+      <textarea id="notes" rows="3"></textarea>
+
+      <button type="submit">Place Order</button>
+    </form>
+
+    <h2 style="margin-top: 2rem;">Recent Orders</h2>
+    <div id="ordersList"></div>
+  </div>
+
+  <script>
+    const API_URL = 'api.php';
+
+    function showAlert(message, type = 'success') {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.textContent = message;
+      alertBox.className = `alert ${type}`;
+      setTimeout(() => alertBox.className = 'alert', 5000);
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        action: 'place_order',
+        customer_name: document.getElementById('customer_name').value,
+        product: document.getElementById('product').value,
+        quantity: parseInt(document.getElementById('quantity').value),
+        amount: parseFloat(document.getElementById('amount').value),
+        payment_method: document.getElementById('payment_method').value,
+        notes: document.getElementById('notes').value
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAlert(`✅ Order #${data.order_id} placed successfully!`, 'success');
+          loadOrders();
+          e.target.reset();
+        } else {
+          showAlert(`❌ Error: ${data.error || 'Failed to place order'}`, 'error');
+        }
+      } catch (err) {
+        showAlert(`❌ Network error: ${err.message}`, 'error');
+      }
+    });
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(API_URL + '?action=get_orders');
+        const data = await res.json();
+        const list = document.getElementById('ordersList');
+        list.innerHTML = '';
+        if (data.orders && data.orders.length) {
+          data.orders.forEach(order => {
+            const div = document.createElement('div');
+            div.className = 'order-item';
+            div.innerHTML = `
+              <strong>#${order.id}</strong> — ${order.customer_name} — ${order.product} (x${order.quantity})<br>
+              <span class="status ${order.status}">${order.status}</span> | $${parseFloat(order.amount).toFixed(2)} | ${order.payment_method}<br>
+              <small>Placed: ${new Date(order.created_at).toLocaleString()}</small>
+            `;
+            list.appendChild(div);
+          });
+        } else {
+          list.innerHTML = '<p>No orders yet.</p>';
+        }
+      } catch (err) {
+        console.error('Failed to load orders:', err);
+      }
+    }
+
+    loadOrders();
+    setInterval(loadOrders, 30000);
+  </script>
+</body>
+</html>
