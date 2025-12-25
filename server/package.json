@@ -10,7 +10,11 @@
     "test": "jest",
     "lint": "eslint src/"
   },
-  "keywords": ["order", "api", "xpert"],
+  "keywords": [
+    "order",
+    "api",
+    "xpert"
+  ],
   "author": "Xpert Forex Trade Inc",
   "license": "MIT",
   "dependencies": {

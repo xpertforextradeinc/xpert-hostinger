@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { v4 as uuidv4 } from 'uuid';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 
@@ -17,11 +17,11 @@ const orders = new Map();
 
 // Middleware for API Key validation
 const validateApiKey = (req, res, next) => {
-  const apiKey = req.headers['x-api-key'];
+  const apiKey = req.headers["x-api-key"];
   const validKey = process.env.API_KEY;
 
   if (!apiKey || apiKey !== validKey) {
-    return res.status(401).json({ error: 'Invalid or missing API key' });
+    return res.status(401).json({ error: "Invalid or missing API key" });
   }
   next();
 };
@@ -29,17 +29,17 @@ const validateApiKey = (req, res, next) => {
 // Routes
 
 // Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 // Create Order
-app.post('/orders', validateApiKey, (req, res) => {
+app.post("/orders", validateApiKey, (req, res) => {
   try {
     const { customerId, items, metadata } = req.body;
 
     if (!customerId || !items || !Array.isArray(items)) {
-      return res.status(400).json({ error: 'Invalid request body' });
+      return res.status(400).json({ error: "Invalid request body" });
     }
 
     const orderId = uuidv4();
@@ -47,10 +47,10 @@ app.post('/orders', validateApiKey, (req, res) => {
       orderId,
       customerId,
       items,
-      status: 'pending',
+      status: "pending",
       metadata: metadata || {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     orders.set(orderId, order);
@@ -62,13 +62,13 @@ app.post('/orders', validateApiKey, (req, res) => {
 });
 
 // Get Order
-app.get('/orders/:orderId', validateApiKey, (req, res) => {
+app.get("/orders/:orderId", validateApiKey, (req, res) => {
   try {
     const { orderId } = req.params;
     const order = orders.get(orderId);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     res.json(order);
@@ -78,7 +78,7 @@ app.get('/orders/:orderId', validateApiKey, (req, res) => {
 });
 
 // Get All Orders
-app.get('/orders', validateApiKey, (req, res) => {
+app.get("/orders", validateApiKey, (req, res) => {
   try {
     const allOrders = Array.from(orders.values());
     res.json({ count: allOrders.length, orders: allOrders });
@@ -88,14 +88,14 @@ app.get('/orders', validateApiKey, (req, res) => {
 });
 
 // Update Order
-app.patch('/orders/:orderId', validateApiKey, (req, res) => {
+app.patch("/orders/:orderId", validateApiKey, (req, res) => {
   try {
     const { orderId } = req.params;
     const { status, items, metadata } = req.body;
     const order = orders.get(orderId);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
     if (status) order.status = status;
@@ -111,20 +111,20 @@ app.patch('/orders/:orderId', validateApiKey, (req, res) => {
 });
 
 // Cancel Order
-app.post('/orders/:orderId/cancel', validateApiKey, (req, res) => {
+app.post("/orders/:orderId/cancel", validateApiKey, (req, res) => {
   try {
     const { orderId } = req.params;
     const order = orders.get(orderId);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.status === 'cancelled') {
-      return res.status(400).json({ error: 'Order already cancelled' });
+    if (order.status === "cancelled") {
+      return res.status(400).json({ error: "Order already cancelled" });
     }
 
-    order.status = 'cancelled';
+    order.status = "cancelled";
     order.updatedAt = new Date().toISOString();
     orders.set(orderId, order);
 
@@ -137,7 +137,7 @@ app.post('/orders/:orderId/cancel', validateApiKey, (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Internal server error' });
+  res.status(500).json({ error: "Internal server error" });
 });
 
 // Start server
