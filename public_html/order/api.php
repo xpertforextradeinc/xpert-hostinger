@@ -94,7 +94,7 @@ class Database {
     public function query($sql) {
         $result = $this->connection->query($sql);
         if (!$result) {
-            EventLogger::log('DATABASE', 'Query Error: ' . $this->connection->error, 'ERROR');
+            EventLogger::log('DATABASE', 'Query Error: ' . $this->connection->error, level: 'ERROR');
             return false;
         }
         return $result;

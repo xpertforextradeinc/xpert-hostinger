@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "cloudmcp-manager": {
+      "type": "http",
+      "url": "https://199333163.router.cloudmcp.run/mcp",
+      "version": "1.0.0",
+      "auth": {
+        "bearer": "TsiOaEBKXGnTxOj0QQufn6dcbFYVuYXpCuyDmtz3caf3a96b"
+      }
+    }
+  },
+  "inputs": []
+}
