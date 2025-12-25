@@ -1,0 +1,60 @@
+{
+  "info": {
+    "name": "XPERT Order API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-API-Key", "value": "{{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{base_url}}/orders",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerId\": \"12345\",\n  \"items\": [\n    { \"productId\": \"A1\", \"quantity\": 2 }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Order",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": "{{base_url}}/orders/{{orderId}}"
+      }
+    },
+    {
+      "name": "Update Order",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "X-API-Key", "value": "{{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{base_url}}/orders/{{orderId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"status\": \"processing\" }"
+        }
+      }
+    },
+    {
+      "name": "Cancel Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "X-API-Key", "value": "{{api_key}}" }],
+        "url": "{{base_url}}/orders/{{orderId}}/cancel"
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "https://api.xpertglobal.systems/v1" },
+    { "key": "api_key", "value": "" },
+    { "key": "orderId", "value": "" }
+  ]
+}
