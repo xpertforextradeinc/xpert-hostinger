@@ -99,7 +99,13 @@
   </div>
 
   <script>
-    const API_URL = 'api.php';
+    const API_URL =
+      (window.APP_CONFIG && window.APP_CONFIG.API_URL) ||
+      new URL(
+        'api.php',
+        window.location.origin +
+          window.location.pathname.replace(/[^/]*$/, '')
+      ).toString();
 
     function showAlert(message, type = 'success') {
       const alertBox = document.getElementById('alertBox');
