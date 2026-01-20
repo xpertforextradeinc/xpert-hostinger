@@ -1,0 +1,219 @@
+name: Metadata Validation & Release Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Nightly at 03:00 UTC
+    - cron: '0 3 * * *'
+
+jobs:
+  validate-metadata:
+    name: Validate Metadata
+    runs-on: windows-latest
+
+    steps:
+      # -----------------------------
+      # Checkout
+      # -----------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -----------------------------
+      # Run Metadata Validator with Auto-Retry
+      # -----------------------------
+      - name: Run metadata validator (with retry)
+        id: validate
+        shell: pwsh
+        run: |
+          $maxAttempts = 3
+          $attempt = 1
+          $delaySeconds = 10
+          $success = $false
+
+          while (-not $success -and $attempt -le $maxAttempts) {
+            Write-Host "Attempt $attempt of $maxAttempts..."
+            try {
+              ./onboarding/metadata/validate_metadata.ps1
+              Write-Host "Validation succeeded."
+              $success = $true
+            } catch {
+              Write-Warning "Validation attempt $attempt failed."
+              if ($attempt -lt $maxAttempts) {
+                Write-Host "Retrying in $delaySeconds seconds..."
+                Start-Sleep -Seconds $delaySeconds
+              } else {
+                Write-Error "Validation failed after $maxAttempts attempts."
+                exit 1
+              }
+            }
+            $attempt++
+          }
+
+      # -----------------------------
+      # Parse logs into GitHub Summary
+      # -----------------------------
+      - name: Parse logs into summary
+        if: always()
+        shell: pwsh
+        run: |
+          $logPath = "./onboarding/metadata/logs/validation.log"
+          if (Test-Path $logPath) {
+            $content = Get-Content $logPath -Raw
+            "### Metadata Validation Log Summary" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            $content | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          } else {
+            "### Metadata Validation Log Summary" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            "_No log file found at $logPath_" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      # -----------------------------
+      # Upload logs on failure
+      # -----------------------------
+      - name: Upload validation logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metadata-validation-logs
+          path: ./onboarding/metadata/logs/
+          retention-days: 7
+
+      # -----------------------------
+      # Slack Notification — Failure (with buttons)
+      # -----------------------------
+      - name: Slack Alert — Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: danger
+          SLACK_TITLE: "Metadata Validation Failed"
+          SLACK_MESSAGE: |
+            ❌ Metadata validation failed.
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            Run ID: ${{ github.run_id }}
+          SLACK_FOOTER: "Metadata CI"
+          SLACK_ATTACHMENTS: >
+            [
+              {
+                "fallback": "Open Logs / PR / Commit",
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Logs",
+                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  },
+                  {
+                    "type": "button",
+                    "text": "View Commit",
+                    "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+                  }${
+                    { github.event_name == 'pull_request' && false ? ',' : '' }
+                  }
+                ]
+              }
+            ]
+
+      # -----------------------------
+      # Slack Notification — Success (with buttons)
+      # -----------------------------
+      - name: Slack Alert — Success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: good
+          SLACK_TITLE: "Metadata Validation Passed"
+          SLACK_MESSAGE: |
+            ✅ Metadata validation passed.
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            Run ID: ${{ github.run_id }}
+          SLACK_FOOTER: "Metadata CI"
+          SLACK_ATTACHMENTS: >
+            [
+              {
+                "fallback": "Open Logs / PR / Commit",
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Logs",
+                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  },
+                  {
+                    "type": "button",
+                    "text": "View Commit",
+                    "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+                  }
+                ]
+              }
+            ]
+
+  pr-comment:
+    name: PR Comment with Validation Results
+    needs: validate-metadata
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build validation summary body
+        id: summary
+        run: |
+          STATUS="${{ needs.validate-metadata.result }}"
+          echo "body=### Metadata Validation Result
+          Status: **${STATUS}**
+
+          - Workflow run: [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          " >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.summary.outputs.body }}
+
+  release:
+    name: Semantic Version Tag & Release
+    needs: validate-metadata
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.validate-metadata.result == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # -----------------------------
+      # Semantic Version Tagging
+      # Uses commit messages: #major, #minor, #patch (optional)
+      # -----------------------------
+      - name: Bump version and push tag
+        id: tag
+        uses: anothrNick/github-tag-action@1.73.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+
+      # -----------------------------
+      # Generate GitHub Release with Notes
+      # -----------------------------
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.new_tag }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
