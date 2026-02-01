@@ -13,10 +13,24 @@
  * - Error handling and validation
  */
 
-// Enable error reporting for development (disable in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
+// Configure error reporting based on environment
+$appEnv = getenv('APP_ENV') ?: 'production';
+
+if (!defined('APP_ENV')) {
+    define('APP_ENV', $appEnv);
+}
+
+if (APP_ENV === 'development') {
+    // In development, show all errors
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+} else {
+    // In production, log errors but do not display them
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+    ini_set('display_errors', '0');
+}
+
+ini_set('log_errors', '1');
 ini_set('error_log', __DIR__ . '/../../logs/api-errors.log');
 
 // Set content type and CORS headers
