@@ -1,11 +1,15 @@
 import { authenticator } from 'otplib';
 import QRCode from 'qrcode';
 import { PrismaClient } from '@prisma/client';
+import validator from 'validator';
 
 const prisma = new PrismaClient();
 const SERVICE_NAME = 'XpertTradeBot'; // The name displayed in the auth app
 
 export const generateTwoFactorSecret = async (userId: string, email: string) => {
+  if (!validator.isEmail(email)) {
+    throw new Error('Invalid email address');
+  }
   const secret = authenticator.generateSecret();
   
   // generate the otpauth URL for the QR code
